@@ -5,7 +5,7 @@ let quotes = [
   { text: "Never give up", category: "Motivation" }
 ];
 
-// function to show a random quote
+// function to display a random quote
 function showRandomQuote() {
   const quoteDisplay = document.getElementById("quoteDisplay");
   if (quotes.length === 0) {
@@ -27,18 +27,45 @@ function addQuote() {
   }
 
   quotes.push({ text, category });
-  showRandomQuote(); // تحديث عرض الاقتباس بعد الإضافة
+  showRandomQuote();
+  alert("Quote added successfully!");
+
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
+}
+
+// function to create the add quote form dynamically
+function createAddQuoteForm() {
+  const formContainer = document.getElementById("formContainer") || document.body;
+
+  const form = document.createElement("div");
+
+  const inputText = document.createElement("input");
+  inputText.id = "newQuoteText";
+  inputText.type = "text";
+  inputText.placeholder = "Enter a new quote";
+
+  const inputCategory = document.createElement("input");
+  inputCategory.id = "newQuoteCategory";
+  inputCategory.type = "text";
+  inputCategory.placeholder = "Enter quote category";
+
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Quote";
+  addButton.onclick = addQuote;
+
+  form.appendChild(inputText);
+  form.appendChild(inputCategory);
+  form.appendChild(addButton);
+
+  formContainer.appendChild(form);
 }
 
 // set up event listener for "Show New Quote" button
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
-// set up event listener for "Add Quote" button
-document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
-
-// initialize page
+// initialize on page load
 window.onload = function() {
   showRandomQuote();
+  createAddQuoteForm();
 };
