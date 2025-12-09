@@ -5,7 +5,7 @@ let quotes = [
   { text: "Never give up", category: "Motivation" }
 ];
 
-// function to display a random quote
+// function to show a random quote
 function showRandomQuote() {
   const quoteDisplay = document.getElementById("quoteDisplay");
   if (quotes.length === 0) {
@@ -27,9 +27,7 @@ function addQuote() {
   }
 
   quotes.push({ text, category });
-  showRandomQuote();
-  alert("Quote added successfully!");
-
+  showRandomQuote(); // تحديث عرض الاقتباس بعد الإضافة
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
 }
@@ -37,7 +35,10 @@ function addQuote() {
 // set up event listener for "Show New Quote" button
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
-// initialize on page load
+// set up event listener for "Add Quote" button
+document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+
+// initialize page
 window.onload = function() {
   showRandomQuote();
 };
