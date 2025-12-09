@@ -13,7 +13,7 @@
   <button id="newQuote">Show New Quote</button>
 
   <!-- Add New Quote -->
-  <div>
+  <div id="formContainer">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button id="addQuoteBtn">Add Quote</button>
@@ -25,9 +25,10 @@
   </select>
 
   <!-- JSON Import/Export -->
-  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
-  <button onclick="exportQuotes()">Export Quotes</button>
+  <input type="file" id="importFile" accept=".json" />
+  <button onclick="exportToJsonFile()">Export Quotes</button>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
