@@ -1,9 +1,11 @@
+// ===== 1. المصفوفة الأساسية للاقتباسات =====
 let quotes = JSON.parse(localStorage.getItem('quotes')) || [
   { text: "The journey of a thousand miles begins with one step.", category: "Motivation" },
   { text: "Life is what happens when you're busy making other plans.", category: "Life" },
   { text: "To be or not to be, that is the question.", category: "Philosophy" }
 ];
 
+// ===== 2. عناصر DOM =====
 const quoteDisplay = document.getElementById('quoteDisplay');
 const newQuoteBtn = document.getElementById('newQuote');
 const addQuoteBtn = document.getElementById('addQuoteBtn');
@@ -13,10 +15,12 @@ const categoryFilter = document.getElementById('categoryFilter');
 const exportBtn = document.getElementById('exportJson');
 const importFile = document.getElementById('importFile');
 
+// ===== 3. حفظ الاقتباسات في التخزين المحلي =====
 function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// ===== 4. عرض اقتباس عشوائي =====
 function showRandomQuote() {
   const filtered = getFilteredQuotes();
   if (filtered.length === 0) {
@@ -27,18 +31,20 @@ function showRandomQuote() {
   quoteDisplay.textContent = `${filtered[randomIndex].text} (${filtered[randomIndex].category})`;
 }
 
+// ===== 5. إضافة اقتباس جديد =====
 function addQuote() {
   const text = newQuoteText.value.trim();
   const category = newQuoteCategory.value.trim() || "General";
   if (!text) return alert("Quote text cannot be empty!");
-  quotes.push({ text, category });
-  saveQuotes();
-  populateCategories();
+  quotes.push({ text, category });        // ✅ إضافة الاقتباس للمصفوفة
+  saveQuotes();                           // ✅ تحديث localStorage
+  populateCategories();                   // ✅ تحديث قائمة الفئات
   newQuoteText.value = "";
   newQuoteCategory.value = "";
-  showRandomQuote();
+  showRandomQuote();                      // ✅ تحديث DOM مباشرة
 }
 
+// ===== 6. تعبئة قائمة الفئات =====
 function populateCategories() {
   const categories = ["all", ...new Set(quotes.map(q => q.category))];
   categoryFilter.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
@@ -46,6 +52,7 @@ function populateCategories() {
   categoryFilter.value = saved;
 }
 
+// ===== 7. تصفية الاقتباسات =====
 function getFilteredQuotes() {
   const category = categoryFilter.value;
   localStorage.setItem('lastCategory', category);
@@ -56,7 +63,7 @@ function filterQuotes() {
   showRandomQuote();
 }
 
-// Export JSON
+// ===== 8. تصدير JSON =====
 exportBtn.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -67,7 +74,7 @@ exportBtn.addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-// Import JSON
+// ===== 9. استيراد JSON =====
 importFile.addEventListener('change', (event) => {
   const fileReader = new FileReader();
   fileReader.onload = function(e) {
@@ -87,10 +94,11 @@ importFile.addEventListener('change', (event) => {
   fileReader.readAsText(event.target.files[0]);
 });
 
+// ===== 10. Event Listeners =====
 newQuoteBtn.addEventListener('click', showRandomQuote);
 addQuoteBtn.addEventListener('click', addQuote);
 categoryFilter.addEventListener('change', filterQuotes);
 
+// ===== 11. Initialize =====
 populateCategories();
 showRandomQuote();
-
