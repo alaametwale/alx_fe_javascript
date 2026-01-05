@@ -8,12 +8,10 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
 // ===== 2. عناصر DOM =====
 const quoteDisplay = document.getElementById('quoteDisplay');
 const newQuoteBtn = document.getElementById('newQuote');
-const addQuoteBtn = document.getElementById('addQuoteBtn');
-const newQuoteText = document.getElementById('newQuoteText');
-const newQuoteCategory = document.getElementById('newQuoteCategory');
 const categoryFilter = document.getElementById('categoryFilter');
 const exportBtn = document.getElementById('exportJson');
 const importFile = document.getElementById('importFile');
+const addQuoteContainer = document.getElementById('addQuoteContainer');
 
 // ===== 3. حفظ الاقتباسات في التخزين المحلي =====
 function saveQuotes() {
@@ -33,18 +31,48 @@ function showRandomQuote() {
 
 // ===== 5. إضافة اقتباس جديد =====
 function addQuote() {
-  const text = newQuoteText.value.trim();
-  const category = newQuoteCategory.value.trim() || "General";
+  const textInput = document.getElementById('newQuoteText');
+  const categoryInput = document.getElementById('newQuoteCategory');
+  const text = textInput.value.trim();
+  const category = categoryInput.value.trim() || "General";
+
   if (!text) return alert("Quote text cannot be empty!");
-  quotes.push({ text, category });        // ✅ إضافة الاقتباس للمصفوفة
-  saveQuotes();                           // ✅ تحديث localStorage
-  populateCategories();                   // ✅ تحديث قائمة الفئات
-  newQuoteText.value = "";
-  newQuoteCategory.value = "";
-  showRandomQuote();                      // ✅ تحديث DOM مباشرة
+
+  quotes.push({ text, category });  // ✅ إضافة الاقتباس للمصفوفة
+  saveQuotes();                     // ✅ تحديث localStorage
+  populateCategories();             // ✅ تحديث قائمة الفئات
+  textInput.value = "";
+  categoryInput.value = "";
+  showRandomQuote();                // ✅ تحديث DOM مباشرة
 }
 
-// ===== 6. تعبئة قائمة الفئات =====
+// ===== 6. إنشاء نموذج إضافة الاقتباسات ديناميكيًا =====
+function createAddQuoteForm() {
+  const formDiv = document.createElement('div');
+
+  const inputText = document.createElement('input');
+  inputText.id = "newQuoteText";
+  inputText.type = "text";
+  inputText.placeholder = "Enter a new quote";
+
+  const inputCategory = document.createElement('input');
+  inputCategory.id = "newQuoteCategory";
+  inputCategory.type = "text";
+  inputCategory.placeholder = "Enter quote category";
+
+  const addBtn = document.createElement('button');
+  addBtn.textContent = "Add Quote";
+  addBtn.id = "addQuoteBtn";
+  addBtn.addEventListener('click', addQuote); // ربط الدالة addQuote
+
+  formDiv.appendChild(inputText);
+  formDiv.appendChild(inputCategory);
+  formDiv.appendChild(addBtn);
+
+  addQuoteContainer.appendChild(formDiv);
+}
+
+// ===== 7. تعبئة قائمة الفئات =====
 function populateCategories() {
   const categories = ["all", ...new Set(quotes.map(q => q.category))];
   categoryFilter.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
@@ -52,7 +80,7 @@ function populateCategories() {
   categoryFilter.value = saved;
 }
 
-// ===== 7. تصفية الاقتباسات =====
+// ===== 8. تصفية الاقتباسات =====
 function getFilteredQuotes() {
   const category = categoryFilter.value;
   localStorage.setItem('lastCategory', category);
@@ -63,7 +91,7 @@ function filterQuotes() {
   showRandomQuote();
 }
 
-// ===== 8. تصدير JSON =====
+// ===== 9. تصدير JSON =====
 exportBtn.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -74,7 +102,7 @@ exportBtn.addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-// ===== 9. استيراد JSON =====
+// ===== 10. استيراد JSON =====
 importFile.addEventListener('change', (event) => {
   const fileReader = new FileReader();
   fileReader.onload = function(e) {
@@ -94,11 +122,11 @@ importFile.addEventListener('change', (event) => {
   fileReader.readAsText(event.target.files[0]);
 });
 
-// ===== 10. Event Listeners =====
+// ===== 11. Event Listeners =====
 newQuoteBtn.addEventListener('click', showRandomQuote);
-addQuoteBtn.addEventListener('click', addQuote);
 categoryFilter.addEventListener('change', filterQuotes);
 
-// ===== 11. Initialize =====
+// ===== 12. Initialize =====
+createAddQuoteForm();
 populateCategories();
 showRandomQuote();
